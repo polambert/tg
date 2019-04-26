@@ -75,18 +75,29 @@ class Window:
 				y += y_inc
 				error += dx
 
-	def line(self, x1, y1, x2, y2, color):
+	def line(self, x1, y1, x2, y2, color, end=True):
 		self.dot(x1, y1, color)
-		self.dot(x2, y2, color)
+		if end:
+			self.dot(x2, y2, color)
 
 		self.raytrace(x1, y1, x2, y2, color)
 	
-	def circle(self, x, y, r, color, double=True):
+	def circle(self, x, y, r, color, fill=None, double=True):
 		distance = r
 
 		# d == 2 if double == True
 		# d == 1 if double == False
 		d = double and 2 or 1
+
+		if fill:
+			a = []
+			for i in range(r * 2):
+				a.append(i / 2)
+			for j in a:
+				for i in range(360):
+					angle = (i / 360) * (2 * pi)
+					
+					self.dot(x + cos(angle) * j * d, y + sin(angle) * j, fill)
 
 		for i in range(360):
 			angle = (i / 360) * (2 * pi) # Radians
@@ -105,7 +116,12 @@ class Window:
 
 			self.dot(x + cos(angle) * dx, y + sin(angle) * dy, color)
 
-	def rect(self, x1, y1, x2, y2, color):
+	def rect(self, x1, y1, x2, y2, color, fill=None):
+		if fill:
+			# Ugh. Fill in the rectangle with the color.
+			for i in range(y1, y2):
+				self.line(x1, i, x2, i, fill)
+
 		self.line(x1, y1, x2, y1, color) # -----
 		self.line(x1, y1, x1, y2, color) # |
 		self.line(x2, y1, x2, y2, color) #     |
@@ -171,10 +187,12 @@ if __name__ == "__main__":
 	while True:
 		window.clear()
 
-		window.circle(35, 20, 12, (0, 255, 0))
+		window.circle(40, 40, 10, (0, 255, 0), (0, 150, 0))
+
+		window.rect(17, 18, 56, 22, (70, 20, 20), (30, 6, 6))
 
 		window.write(20, 20, "Hello, player. Your name is ", (255, 255, 255))
-		window.write("Slime", (0, 255, 0))
+		window.write("Slime", (255, 0, 0))
 		window.write("?", (255, 255, 255))
 
 		window.display()
