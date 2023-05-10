@@ -179,7 +179,6 @@ class Window:
 		print("\033[F" * self.height, end="")
 
 if __name__ == "__main__":
-	# We're testing it
 	window = Window()
 
 	window.clear()
